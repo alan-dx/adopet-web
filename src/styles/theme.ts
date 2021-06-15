@@ -4,18 +4,25 @@ export const theme = extendTheme({
   colors: {
     gray: {
       "50": "#FAFAFA"
+    },
+    green: {
+      "300": "#14D361"
+    },
+    purple: {
+      "200": "#9871F5",
+      "500": "#8257E5",
     }
   },
-  textStyle: {
+  textStyles: {
     h1: {
       fontsize: ["2.5rem", "8xl"],
       fontWeight: "bold",
       color: "gray.50",
     },
     h2: {
-      fontsize: ["2xl", "6xl"],
+      fontSize: ["xl", "6xl"],
       fontWeight: "bold",
-      color: "gray.50",
+      color: "#FFFF",
     },
     p: {
       fontSize: ["lg", "4xl"],
