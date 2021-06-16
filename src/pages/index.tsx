@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from '@chakra-ui/react'
+import { Flex, Image, Text, Link as ChakraLink } from '@chakra-ui/react'
 import Link from 'next/link'
 import { FiHome, FiUser } from 'react-icons/fi'
 import { UserTypeButton } from '../components/UserTypeButton'
@@ -21,13 +21,14 @@ export default function Home() {
       bg="purple.500"
       flexDir={["column", "row"]}
       align="center"
-      justify={["center", "space-around"]}
+      justify={["center", "space-evenly"]}
     >
       <Image
         boxSize={["fit-content", "96"]}
         objectFit="cover"
         src="/logo.svg"
         alt="Logo"
+        mr={["0", "4"]}
       />
       <Flex
         flexDir="column"
@@ -69,19 +70,16 @@ export default function Home() {
             Ong
           </UserTypeButton>
         </Flex>
-        <Text
+        <ChakraLink
           fontSize="xl"
           textAlign="center"
           mt="16"
           color="gray.50"
-          _hover={{
-            textDecoration: "underline",
-          }}
         >
           <Link href="/signin">
             Já possui conta? Faça o login
           </Link>
-        </Text>
+        </ChakraLink>
       </Flex>
     </Flex>
   )
