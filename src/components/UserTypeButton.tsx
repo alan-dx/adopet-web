@@ -9,9 +9,6 @@ interface UserTypeButtonProps extends ButtonProps {
 export function UserTypeButton({icon, children, ...rest}:UserTypeButtonProps) {
   return (
     <Button
-      flexDir="column"
-      boxSize={36}
-      mt="12"
       {...rest}
     >
       {icon && <Icon as={icon} color="gray.50" boxSize={10} />}
