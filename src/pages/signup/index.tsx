@@ -9,9 +9,10 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { Input } from '../../components/Input'
-import { FiMail, FiLock, FiLogIn } from 'react-icons/fi'
+import { FiMail, FiLock, FiArrowLeft, FiUser } from 'react-icons/fi'
 import { ActionButton } from '../../components/ActionButton'
 import Head from 'next/head'
+
 
 export default function SignIn() {
 
@@ -23,12 +24,27 @@ export default function SignIn() {
   return (
     <>
       <Head>
-        <title>Login | AdoPet</title>
+        <title>Cadastro | AdoPet</title>
       </Head>
       <Flex
         height="100vh"
         width="100vw"
       >
+        {
+          isDesktop && (
+            <Flex
+              flex="1"
+              align="center"
+            >
+              <Image
+                boxSize="fit-content"
+                objectFit="cover"
+                src="/signup-hero.svg"
+                alt="Logo"
+              />
+            </Flex>
+          )
+        }
         <Flex
           flexDir="column"
           flex="1"
@@ -45,34 +61,17 @@ export default function SignIn() {
             alt="Logo"
           />
           <VStack spacing={4} mt={isDesktop ? "16" : "12"} w={["64","80","90"]}>
+            <Input placeholder="Nome" type="text" icon={FiUser} />
             <Input placeholder="E-mail" type="email" icon={FiMail} />
             <Input placeholder="Senha" type="password" icon={FiLock} />
             <ActionButton>
               Entrar
             </ActionButton>
-            <ChakraLink color="gray.50">
-              <Link href="/signup">Esqueci minha senha</Link>
-            </ChakraLink>
           </VStack>
           <ChakraLink mt={["10", "20"]} color="gray.50">
-            {<Icon as={FiLogIn} />} <Link href="/signup">Criar Conta</Link>
+            {<Icon as={FiArrowLeft} />} <Link href="/signin">Fazer login</Link>
           </ChakraLink>
         </Flex>
-        {
-          isDesktop && (
-            <Flex
-              flex="1"
-              align="center"
-            >
-              <Image
-                boxSize="fit-content"
-                objectFit="cover"
-                src="/signin-hero.svg"
-                alt="Logo"
-              />
-            </Flex>
-          )
-          }
       </Flex>
     </>
   )

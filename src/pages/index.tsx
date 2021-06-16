@@ -16,9 +16,9 @@ export default function Home() {
 
   return (
     <>
-    <Head>
-      <title>Home | AdoPet</title>
-    </Head>
+      <Head>
+        <title>Home | AdoPet</title>
+      </Head>
       <Flex
         w="100vw"
         h="100vh"
