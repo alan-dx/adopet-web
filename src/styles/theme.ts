@@ -20,9 +20,9 @@ export const theme = extendTheme({
 			color: "gray.50",
 		},
 		h2: {
-			fontSize: ["xl", "6xl"],
+			fontSize: ["2xl", "1.5rem"],
 			fontWeight: "bold",
-			color: "#FFFF",
+			color: "gray.50",
 		},
 		p: {
 			fontSize: ["lg", "4xl"],
