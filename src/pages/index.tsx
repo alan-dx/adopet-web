@@ -3,15 +3,18 @@ import Link from 'next/link'
 import { FiHome, FiUser } from 'react-icons/fi'
 import { UserTypeButton } from '../components/UserTypeButton'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 export default function Home() {
 
+  const router = useRouter()
+
   function handleUserButton() {
-    console.log('user')
+    router.push('/signup/user')
   }
 
   function handleOngButton() {
-    console.log('ong')
+    router.push('/signup/ong')
   }
 
   return (
@@ -75,16 +78,17 @@ export default function Home() {
               Ong
             </UserTypeButton>
           </Flex>
-          <ChakraLink
-            fontSize="xl"
-            textAlign="center"
-            mt="16"
-            color="gray.50"
-          >
-            <Link href="/signin">
-              Já possui conta? Faça o login
-            </Link>
-          </ChakraLink>
+          <Link href="/signin">
+            <ChakraLink
+              fontSize="xl"
+              textAlign="center"
+              mt="16"
+              color="gray.50"
+            >
+              
+                Já possui conta? Faça o login
+            </ChakraLink>
+          </Link>
         </Flex>
       </Flex>
 

@@ -50,13 +50,17 @@ export default function SignIn() {
             <ActionButton>
               Entrar
             </ActionButton>
-            <ChakraLink color="gray.50">
-              <Link href="/signup">Esqueci minha senha</Link>
-            </ChakraLink>
+            <Link href="/" passHref>
+              <ChakraLink color="gray.50">
+                Esqueci minha senha
+              </ChakraLink>
+            </Link>
           </VStack>
-          <ChakraLink mt={["10", "20"]} color="gray.50">
-            {<Icon as={FiLogIn} />} <Link href="/signup">Criar Conta</Link>
-          </ChakraLink>
+          <Link href="/" passHref>
+            <ChakraLink mt={["10", "20"]} color="gray.50">
+              {<Icon as={FiLogIn} mr="1" />}Criar Conta
+            </ChakraLink>
+          </Link>
         </Flex>
         {
           isDesktop && (

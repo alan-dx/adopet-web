@@ -12,14 +12,23 @@ import { Input } from '../../components/Input'
 import { FiMail, FiLock, FiArrowLeft, FiUser } from 'react-icons/fi'
 import { ActionButton } from '../../components/ActionButton'
 import Head from 'next/head'
+import { GetServerSideProps } from 'next'
+import { useEffect } from 'react'
 
+interface SignUpProps {
+  user_type:string
+}
 
-export default function SignIn() {
+export default function SignUp({user_type = 'user'}: SignUpProps) {
 
   const isDesktop = useBreakpointValue({
     base: false,
     lg: true
   })
+
+  useEffect(() => {
+    console.log(user_type)
+  }, [])
   
   return (
     <>
@@ -68,11 +77,26 @@ export default function SignIn() {
               Entrar
             </ActionButton>
           </VStack>
-          <ChakraLink mt={["10", "20"]} color="gray.50">
-            {<Icon as={FiArrowLeft} />} <Link href="/signin">Fazer login</Link>
-          </ChakraLink>
+          <Link href="/" passHref>
+            <ChakraLink mt={["10", "20"]} color="gray.50">
+              {<Icon as={FiArrowLeft} mr="1" />}Fazer login
+            </ChakraLink>
+          </Link>
         </Flex>
       </Flex>
     </>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({req, params}) => {
+  
+  const {user_type} = params
+  console.log(user_type)
+  
+  return {
+    props: {
+      user_type
+    }
+  }
+
 }
