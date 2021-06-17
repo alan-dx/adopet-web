@@ -1,10 +1,6 @@
-import { Button, Text } from '@chakra-ui/react'
+import { Button, Text, ButtonProps } from '@chakra-ui/react'
 
-interface ActionButtonProps {
-  children: string
-}
-
-export function ActionButton({children}: ActionButtonProps) {
+export function ActionButton({children, ...rest}: ButtonProps) {
   return (
     <Button
       bg="green.300"
@@ -13,6 +9,7 @@ export function ActionButton({children}: ActionButtonProps) {
         background: "green.500",
         transition: "background 0.5s"
       }}
+      {...rest}
     >
       <Text color="gray.50" >{children}</Text>
     </Button>

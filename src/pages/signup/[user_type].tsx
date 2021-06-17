@@ -4,31 +4,53 @@ import {
   VStack, 
   useBreakpointValue, 
   Link as ChakraLink, 
-  Text,
   Icon
 } from '@chakra-ui/react'
 import Link from 'next/link'
 import { Input } from '../../components/Input'
-import { FiMail, FiLock, FiArrowLeft, FiUser } from 'react-icons/fi'
+import { FiMail, FiLock, FiArrowLeft, FiUser, FiHome, FiCheckCircle } from 'react-icons/fi'
 import { ActionButton } from '../../components/ActionButton'
 import Head from 'next/head'
 import { GetServerSideProps } from 'next'
 import { useEffect } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+type SignUpFormData = {
+  name: string;
+  email: string;
+  password: string;
+}
 
 interface SignUpProps {
   user_type:string
 }
 
+const signUpFormSchema = yup.object().shape({
+  name: yup.string().required('Nome obrigatório'),
+  email: yup.string().email('E-mail inválido').required('E-mail obrigatório'),
+  password: yup.string().required('Senha obrigatória').min(6, 'Ao mínimo 6 caracteres'),
+  cPassword: yup.string().oneOf([
+    null, yup.ref('password')
+  ], 'As senhas não conferem!')
+})
+
 export default function SignUp({user_type = 'user'}: SignUpProps) {
+
+  const { register, handleSubmit, formState: {errors, isSubmitting} } = useForm({
+    resolver: yupResolver(signUpFormSchema)
+  })
 
   const isDesktop = useBreakpointValue({
     base: false,
     lg: true
   })
 
-  useEffect(() => {
-    console.log(user_type)
-  }, [])
+  const handleSignUp: SubmitHandler<SignUpFormData> = async (values, event) => {
+    console.log({isOng: user_type == 'user' ? false : true, ...values})
+    return new Promise(resolve => setTimeout(resolve, 2000))
+  }
   
   return (
     <>
@@ -55,6 +77,8 @@ export default function SignUp({user_type = 'user'}: SignUpProps) {
           )
         }
         <Flex
+          as="form"
+          onSubmit={handleSubmit(handleSignUp)}
           flexDir="column"
           flex="1"
           height="100%"
@@ -69,17 +93,45 @@ export default function SignUp({user_type = 'user'}: SignUpProps) {
             src="/logo.svg"
             alt="Logo"
           />
-          <VStack spacing={4} mt={isDesktop ? "16" : "12"} w={["64","80","90"]}>
-            <Input placeholder="Nome" type="text" icon={FiUser} />
-            <Input placeholder="E-mail" type="email" icon={FiMail} />
-            <Input placeholder="Senha" type="password" icon={FiLock} />
-            <ActionButton>
+          <VStack spacing={3} mt={isDesktop ? "8" : "6"} w={["64","80","90"]}>
+            <Input 
+              placeholder={user_type == 'user' ? "Nome" : "Nome da Ong"} 
+              type="text" 
+              icon={user_type == 'user' ? FiUser : FiHome}
+              error={errors.name}
+              {...register('name')}
+            />
+            <Input
+              placeholder="E-mail"
+              type="email"
+              icon={FiMail} 
+              error={errors.email}
+              {...register('email')}
+            />
+            <Input
+              placeholder="Crie uma senha"
+              type="password"
+              icon={FiLock}
+              error={errors.password}
+              {...register('password')}
+            />
+            <Input
+              placeholder="Confirme a senha"
+              type="password"
+              icon={FiCheckCircle}
+              error={errors.cPassword}
+              {...register('cPassword')}
+            />
+            <ActionButton 
+              type="submit"
+              isLoading={isSubmitting}
+            >
               Entrar
             </ActionButton>
           </VStack>
           <Link href="/" passHref>
-            <ChakraLink mt={["10", "20"]} color="gray.50">
-              {<Icon as={FiArrowLeft} mr="1" />}Fazer login
+            <ChakraLink mt={["4", "8"]} color="gray.50">
+              {<Icon as={FiArrowLeft} mr="1" />} Voltar
             </ChakraLink>
           </Link>
         </Flex>

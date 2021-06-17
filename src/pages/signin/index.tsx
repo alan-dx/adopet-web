@@ -4,7 +4,6 @@ import {
   VStack, 
   useBreakpointValue, 
   Link as ChakraLink, 
-  Text,
   Icon
 } from '@chakra-ui/react'
 import Link from 'next/link'
@@ -12,13 +11,34 @@ import { Input } from '../../components/Input'
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi'
 import { ActionButton } from '../../components/ActionButton'
 import Head from 'next/head'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+type SignInFormData = {
+  email: string;
+  password: string
+}
+
+const signInFormSchema = yup.object().shape({
+  email: yup.string().email("E-mail inválido").required('E-mail obrigatório'),
+  password: yup.string().required('Senha obrigatória'),
+})
 
 export default function SignIn() {
+
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: yupResolver(signInFormSchema)
+  })
 
   const isDesktop = useBreakpointValue({
     base: false,
     lg: true
   })
+
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
+    console.log(values)
+  }
   
   return (
     <>
@@ -30,6 +50,8 @@ export default function SignIn() {
         width="100vw"
       >
         <Flex
+          as="form"
+          onSubmit={handleSubmit(handleSignIn)}
           flexDir="column"
           flex="1"
           height="100%"
@@ -45,9 +67,26 @@ export default function SignIn() {
             alt="Logo"
           />
           <VStack spacing={4} mt={isDesktop ? "16" : "12"} w={["64","80","90"]}>
-            <Input placeholder="E-mail" type="email" icon={FiMail} />
-            <Input placeholder="Senha" type="password" icon={FiLock} />
-            <ActionButton>
+            <Input
+              placeholder="E-mail"
+              name="email"
+              type="email"
+              icon={FiMail}
+              error={errors.email}
+              {...register('email')}
+            />
+            <Input
+              placeholder="Senha"
+              name="password"
+              type="password"
+              icon={FiLock}
+              error={errors.password}
+              {...register('password')}
+            />
+            <ActionButton
+              type="submit"
+              isLoading={isSubmitting}
+            >
               Entrar
             </ActionButton>
             <Link href="/" passHref>
