@@ -9,19 +9,23 @@ import {
   Icon,
   AspectRatio,
   Image,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { FiUpload } from "react-icons/fi";
+} from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { FiUpload, FiPhone } from 'react-icons/fi';
 
-import { Header } from "../../../components/Header";
-import { ActionButton } from "../../../components/ActionButton";
-import { FileUpload } from "../../../components/FileUpload";
+import { Header } from '../../../components/Header';
+import { ActionButton } from '../../../components/ActionButton';
+import { FileUpload } from '../../../components/FileUpload';
+import { Input } from '../../../components/Input';
 
-import { validateImageFile } from "../../../utils/validateImageFile";
+import { validateImageFile } from '../../../utils/validateImageFile';
 
-type FormValues = {
+type NewPostData = {
   file_: FileList;
+  nome: string;
+  description: string;
+  phone: string;
 };
 
 const NewPost = () => {
@@ -30,12 +34,11 @@ const NewPost = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     watch,
-  } = useForm<FormValues>();
-  const onSubmit = handleSubmit((data) => console.log("On Submit: ", data));
+  } = useForm();
 
-  const watchImages = watch("file_");
+  const watchImages = watch('file_');
 
   useEffect(() => {
     if (watchImages) {
@@ -49,18 +52,56 @@ const NewPost = () => {
     }
   }, [watchImages]);
 
-  return (
-    <form onSubmit={onSubmit}>
-      <Header title="Novo post" />
+  const handleSignIn: SubmitHandler<NewPostData> = async (values, event) => {
+    console.log(values);
+  };
 
-      <Flex direction="column" align="center" p={[4, 8]}>
+  return (
+    <form onSubmit={handleSubmit(handleSignIn)}>
+      <Header title='Novo post' />
+
+      <Flex
+        direction='column'
+        align='center'
+        p={[4, 8]}
+        bg='white'
+        m={[4, 8]}
+        borderRadius='md'
+      >
+        <Stack width='full' mb={[4, 8]}>
+          <Input
+            placeholder='Nome'
+            name='nome'
+            type='text'
+            error={errors.nome}
+            {...register('nome')}
+          />
+          <Input
+            placeholder='Descrição'
+            name='description'
+            type='text'
+            error={errors.description}
+            {...register('description')}
+          />
+          <Input
+            placeholder='Número de telefone'
+            name='phone'
+            type='number'
+            icon={FiPhone}
+            error={errors.phone}
+            {...register('phone')}
+          />
+        </Stack>
+
         <FormControl isInvalid={!!errors.file_}>
-          <FormLabel>{"Adicionar foto"}</FormLabel>
+          <FormLabel color='gray.600' textAlign='center'>
+            {'Adicionar foto'}
+          </FormLabel>
 
           {previewImages.length !== 0 && (
-            <Stack direction="row" overflow="scroll" spacing={4}>
+            <Stack direction='row' overflow='scroll' spacing={4}>
               {previewImages?.map((image) => (
-                <AspectRatio key={image} ratio={4 / 3} flex={1} minWidth="xs">
+                <AspectRatio key={image} ratio={4 / 3} flex={1} minWidth='xs'>
                   <Image src={image} borderRadius={8} />
                 </AspectRatio>
               ))}
@@ -69,14 +110,14 @@ const NewPost = () => {
 
           <Box my={[4, 8]}>
             <FileUpload
-              accept={"image/*"}
+              accept={'image/*'}
               multiple
-              register={register("file_", { validate: validateImageFile })}
+              register={register('file_', { validate: validateImageFile })}
             >
               <Button
-                bg="gray.300"
-                textColor="gray.600"
-                width="full"
+                bg='gray.300'
+                textColor='gray.600'
+                width='full'
                 leftIcon={<Icon as={FiUpload} />}
               >
                 Upload
@@ -89,7 +130,9 @@ const NewPost = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <ActionButton>Submit</ActionButton>
+        <ActionButton type='submit' isLoading={isSubmitting}>
+          Enviar
+        </ActionButton>
       </Flex>
     </form>
   );
