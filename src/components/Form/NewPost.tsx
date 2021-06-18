@@ -2,10 +2,13 @@ import { Flex, Stack, Divider } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { FiPhone } from 'react-icons/fi';
 
-import { Header } from '../../../components/Header';
-import { ActionButton } from '../../../components/ActionButton';
-import { ImageUpload } from '../../../components/FileUpload';
-import { Input } from '../../../components/Input';
+import { ActionButton } from '../ActionButton';
+import { ImageUpload } from '../FileUpload';
+import { Input } from '../Input';
+
+interface NewPostProps {
+  closeModal: () => void;
+}
 
 type NewPostData = {
   image: FileList;
@@ -14,7 +17,7 @@ type NewPostData = {
   phone: string;
 };
 
-const NewPost = () => {
+const NewPost = ({ closeModal }: NewPostProps) => {
   const {
     register,
     handleSubmit,
@@ -68,18 +71,17 @@ const NewPost = () => {
 
   const handleSignIn: SubmitHandler<NewPostData> = async (values, event) => {
     console.log(values);
+    closeModal();
   };
 
   return (
     <form onSubmit={handleSubmit(handleSignIn)}>
-      <Header title='Novo post' />
-
       <Flex
         direction='column'
         align='center'
         p={[4, 8]}
         bg='white'
-        m={[4, 8]}
+        mb={[4, 8]}
         borderRadius='md'
       >
         <Stack width='full' mb={[4, 8]}>
@@ -124,4 +126,4 @@ const NewPost = () => {
   );
 };
 
-export default NewPost;
+export { NewPost };
