@@ -1,56 +1,70 @@
-import {
-  Flex,
-  Box,
-  Stack,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Icon,
-  AspectRatio,
-  Image,
-} from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Flex, Stack, Divider } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { FiUpload, FiPhone } from 'react-icons/fi';
+import { FiPhone } from 'react-icons/fi';
 
 import { Header } from '../../../components/Header';
 import { ActionButton } from '../../../components/ActionButton';
-import { FileUpload } from '../../../components/FileUpload';
+import { ImageUpload } from '../../../components/FileUpload';
 import { Input } from '../../../components/Input';
 
-import { validateImageFile } from '../../../utils/validateImageFile';
-
 type NewPostData = {
-  file_: FileList;
+  image: FileList;
   nome: string;
   description: string;
   phone: string;
 };
 
 const NewPost = () => {
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
+    control,
   } = useForm();
 
-  const watchImages = watch('file_');
-
-  useEffect(() => {
-    if (watchImages) {
-      const selectedImages = Array.from(watchImages);
-
-      const selectedImagesPreview = selectedImages.map((image) => {
-        return URL.createObjectURL(image);
-      });
-
-      setPreviewImages(selectedImagesPreview);
-    }
-  }, [watchImages]);
+  const formValidations = {
+    nome: {
+      required: 'Nome obrigatório',
+      minLength: {
+        value: 2,
+        message: 'Mínimo de 2 caracteres',
+      },
+      maxLength: {
+        value: 20,
+        message: 'Máximo de 20 caracteres',
+      },
+    },
+    description: {
+      required: 'Descrição obrigatória',
+      maxLength: {
+        value: 65,
+        message: 'Máximo de 65 caracteres',
+      },
+    },
+    phone: {
+      required: 'Telefone obrigatório',
+      minLength: {
+        value: 11,
+        message: 'Mínimo de 1 caracteres',
+      },
+    },
+    image: {
+      required: 'Arquivo obrigatório',
+      validate: {
+        lessThan10MB: (image: FileList) => {
+          return (
+            image[0].size <= 10485760 || 'O arquivo deve ser menor que 10MB'
+          );
+        },
+        acceptedFormats: (image: FileList) => {
+          return (
+            image[0].type.search('^.*image/(jpg|JPG|jpeg|JPEG|png|PNG)$') !==
+              -1 || 'Somente são aceitos arquivos PNG, JPEG'
+          );
+        },
+      },
+    },
+  };
 
   const handleSignIn: SubmitHandler<NewPostData> = async (values, event) => {
     console.log(values);
@@ -74,14 +88,14 @@ const NewPost = () => {
             name='nome'
             type='text'
             error={errors.nome}
-            {...register('nome')}
+            {...register('nome', formValidations.nome)}
           />
           <Input
             placeholder='Descrição'
             name='description'
             type='text'
             error={errors.description}
-            {...register('description')}
+            {...register('description', formValidations.description)}
           />
           <Input
             placeholder='Número de telefone'
@@ -89,46 +103,18 @@ const NewPost = () => {
             type='number'
             icon={FiPhone}
             error={errors.phone}
-            {...register('phone')}
+            {...register('phone', formValidations.phone)}
+          />
+
+          <Divider />
+
+          <ImageUpload
+            multiple
+            control={control}
+            error={errors.image}
+            register={register('image', formValidations.image)}
           />
         </Stack>
-
-        <FormControl isInvalid={!!errors.file_}>
-          <FormLabel color='gray.600' textAlign='center'>
-            {'Adicionar foto'}
-          </FormLabel>
-
-          {previewImages.length !== 0 && (
-            <Stack direction='row' overflow='scroll' spacing={4}>
-              {previewImages?.map((image) => (
-                <AspectRatio key={image} ratio={4 / 3} flex={1} minWidth='xs'>
-                  <Image src={image} borderRadius={8} />
-                </AspectRatio>
-              ))}
-            </Stack>
-          )}
-
-          <Box my={[4, 8]}>
-            <FileUpload
-              accept={'image/*'}
-              multiple
-              register={register('file_', { validate: validateImageFile })}
-            >
-              <Button
-                bg='gray.300'
-                textColor='gray.600'
-                width='full'
-                leftIcon={<Icon as={FiUpload} />}
-              >
-                Upload
-              </Button>
-            </FileUpload>
-          </Box>
-
-          <FormErrorMessage>
-            {errors.file_ && errors?.file_.message}
-          </FormErrorMessage>
-        </FormControl>
 
         <ActionButton type='submit' isLoading={isSubmitting}>
           Enviar
