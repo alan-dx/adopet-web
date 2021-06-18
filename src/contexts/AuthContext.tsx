@@ -93,7 +93,15 @@ export function AuthProvider({children}:AuthProviderProps) {
       alert('Usuário cadastrado com sucesso!')
 
     } catch (error) {
+
+      const { status } = error.response
+
+      if (status == 409) {
+        alert('Este e-mail já está sendo utilizado em outra conta.')
+      } else {
         alert('Houve um erro ao realizar seu cadastro, tente novamente mais tarde!')
+      }
+      
     }
   }, [])
 
