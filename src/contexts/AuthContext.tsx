@@ -12,6 +12,7 @@ interface AuthContextData {
   user: User;
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
+  signOutByContext: () => void
 }
 
 type User = {
@@ -31,6 +32,19 @@ type SignUpCredentials = {
   email: string;
   password: string;
   isOng: boolean
+}
+
+export function signOut() {
+  destroyCookie(
+    undefined,
+    'adopet.token',
+    {
+      path: '/'
+    }
+  )
+
+  Router.push('/signin')
+
 }
 
 export const AuthContext = createContext({} as AuthContextData )
@@ -105,8 +119,10 @@ export function AuthProvider({children}:AuthProviderProps) {
     }
   }, [])
 
+  const signOutByContext = useCallback(signOut, [])
+
   return (
-    <AuthContext.Provider value={{user, signIn, signUp}}>
+    <AuthContext.Provider value={{user, signIn, signUp, signOutByContext}}>
       {children}
     </AuthContext.Provider>
   )

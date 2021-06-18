@@ -10,7 +10,9 @@ import {
   useDisclosure,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import { useContext } from 'react';
 import { FiPlus, FiPower } from 'react-icons/fi';
+import { AuthContext } from '../../contexts/AuthContext';
 
 import { ModalNewPost } from '../Modal/NewPost';
 
@@ -20,6 +22,8 @@ interface HeaderProps {
 
 const Header = ({ title }: HeaderProps) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
+
+  const { signOutByContext } = useContext(AuthContext)
 
   const isDesktop = useBreakpointValue({
     base: false,
@@ -81,7 +85,7 @@ const Header = ({ title }: HeaderProps) => {
               <Icon as={FiPlus} boxSize={6} color='gray.50' />
             </Button>
           )}
-          <Button variant='unstyled' _hover={{ bg: 'purple.400' }}>
+          <Button onClick={signOutByContext} variant='unstyled' _hover={{ bg: 'purple.400' }}>
             <Icon as={FiPower} boxSize={6} color='gray.50' />
           </Button>
         </ButtonGroup>

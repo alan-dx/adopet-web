@@ -4,6 +4,7 @@ import { FiHome, FiUser } from 'react-icons/fi'
 import { UserTypeButton } from '../components/UserTypeButton'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { withSSRGuest } from '../utils/withSSRGuest'
 
 export default function Home() {
 
@@ -95,3 +96,12 @@ export default function Home() {
     </>
   )
 }
+
+export const getServerSideProps = withSSRGuest(async(ctx) => {
+  
+  return {
+    props: {
+
+    }
+  }
+})

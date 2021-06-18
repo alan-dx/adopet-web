@@ -18,6 +18,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { withSSRGuest } from '../../utils/withSSRGuest'
 
 type SignUpFormData = {
   name: string;
@@ -149,7 +150,7 @@ export default function SignUp({user_type = 'user'}: SignUpProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ({req, params}) => {
+export const getServerSideProps = withSSRGuest(async ({req, params}) => {
   
   const {user_type} = params
   console.log(user_type)
@@ -160,4 +161,4 @@ export const getServerSideProps: GetServerSideProps = async ({req, params}) => {
     }
   }
 
-}
+})
