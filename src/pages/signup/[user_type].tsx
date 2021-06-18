@@ -16,6 +16,8 @@ import { useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
 
 type SignUpFormData = {
   name: string;
@@ -38,6 +40,8 @@ const signUpFormSchema = yup.object().shape({
 
 export default function SignUp({user_type = 'user'}: SignUpProps) {
 
+  const { signUp } = useContext(AuthContext)
+
   const { register, handleSubmit, formState: {errors, isSubmitting} } = useForm({
     resolver: yupResolver(signUpFormSchema)
   })
@@ -47,9 +51,14 @@ export default function SignUp({user_type = 'user'}: SignUpProps) {
     lg: true
   })
 
-  const handleSignUp: SubmitHandler<SignUpFormData> = async (values, event) => {
-    console.log({isOng: user_type == 'user' ? false : true, ...values})
-    return new Promise(resolve => setTimeout(resolve, 2000))
+  const handleSignUp: SubmitHandler<SignUpFormData> = async ({ name, email, password }, event) => {
+
+    signUp({
+      name,
+      email,
+      password,
+      isOng: user_type == 'user' ? false : true
+    })
   }
   
   return (
@@ -126,7 +135,7 @@ export default function SignUp({user_type = 'user'}: SignUpProps) {
               type="submit"
               isLoading={isSubmitting}
             >
-              Entrar
+              Cadastrar
             </ActionButton>
           </VStack>
           <Link href="/" passHref>

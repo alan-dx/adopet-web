@@ -14,6 +14,8 @@ import Head from 'next/head'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthContext'
 
 type SignInFormData = {
   email: string;
@@ -27,6 +29,8 @@ const signInFormSchema = yup.object().shape({
 
 export default function SignIn() {
 
+  const { signIn } = useContext(AuthContext)
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: yupResolver(signInFormSchema)
   })
@@ -36,8 +40,13 @@ export default function SignIn() {
     lg: true
   })
 
-  const handleSignIn: SubmitHandler<SignInFormData> = async (values, event) => {
-    console.log(values)
+  const handleSignIn: SubmitHandler<SignInFormData> = async ({email, password}, event) => {
+
+    await signIn({
+      email,
+      password
+    })
+
   }
   
   return (
