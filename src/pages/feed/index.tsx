@@ -2,6 +2,7 @@ import { Flex, Box, VStack } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
 import { Card } from "../../components/Card";
 import Head from "next/head";
+import { withSSRAuth } from "../../utils/withSSRAuth";
 
 const Feed = () => {
   return (
@@ -22,5 +23,16 @@ const Feed = () => {
     </>
   );
 };
+
+export const getServerSideProps = withSSRAuth(async () => {
+
+  //TODO: fazer as requisições de listagem do feed
+
+  return {
+    props: {
+      
+    }
+  }
+})
 
 export default Feed;
