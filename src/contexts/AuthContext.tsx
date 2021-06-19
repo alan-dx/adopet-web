@@ -2,7 +2,8 @@ import { useCallback, useState } from 'react'
 import {createContext, ReactNode} from 'react'
 import Router from 'next/router'
 import { api } from '../services/api'
-import { setCookie, destroyCookie } from 'nookies'
+import { setCookie, destroyCookie, parseCookies } from 'nookies'
+import { useEffect } from 'react'
 
 interface AuthProviderProps {
   children: ReactNode
@@ -19,7 +20,8 @@ type User = {
   id: string;
   name: string;
   email: string;
-  avatarURL?: string
+  isOng?: boolean;
+  avatarURL?: string;
 }
 
 type SignInCredentials = {
@@ -35,15 +37,22 @@ type SignUpCredentials = {
 }
 
 export function signOut() {
-  destroyCookie(
-    undefined,
-    'adopet.token',
-    {
-      path: '/'
-    }
-  )
+  // destroyCookie(
+  //   undefined,
+  //   'adopet.token',
+  //   {
+  //     path: '/'
+  //   }
+  // )
 
-  Router.push('/signin')
+  // Router.push('/signin')
+
+  //TESTES DA ROTA REFRESH-TOKEN
+  api.post('refresh-token').then(response => {
+    console.log(response)
+  }).catch(error => {
+    console.log(error)
+  })
 
 }
 
@@ -52,6 +61,28 @@ export const AuthContext = createContext({} as AuthContextData )
 export function AuthProvider({children}:AuthProviderProps) {
 
   const [user, setUser] = useState<User>(null)
+
+  useEffect(() => {
+    
+    const { 'adopet.token': token } = parseCookies()
+
+    if (token) {
+        api.get('/profile').then(response => {
+          const { name, email, id, isOng, avatarURL } = response.data
+          console.log(name)
+  
+          setUser({
+            id,
+            name,
+            email,
+            isOng,
+            avatarURL
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+    }
+  }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials)  => {
     try {
@@ -67,6 +98,7 @@ export function AuthProvider({children}:AuthProviderProps) {
         id,
         name,
         email,
+        isOng: false, //REMOVER
         avatarURL
       })
 
