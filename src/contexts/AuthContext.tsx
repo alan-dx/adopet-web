@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
 import {createContext, ReactNode} from 'react'
 import Router from 'next/router'
-import { api } from '../services/api'
 import { setCookie, destroyCookie, parseCookies } from 'nookies'
 import { useEffect } from 'react'
+import { api } from '../services/apiClient'
 
 interface AuthProviderProps {
   children: ReactNode
@@ -66,22 +66,22 @@ export function AuthProvider({children}:AuthProviderProps) {
     
     const { 'adopet.token': token } = parseCookies()
 
-    if (token) {
-        api.get('/profile').then(response => {
-          const { name, email, id, isOng, avatarURL } = response.data
-          console.log(name)
+    // if (token) {
+    //     api.get('/profile').then(response => {
+    //       const { name, email, id, isOng, avatarURL } = response.data
+    //       console.log(name)
   
-          setUser({
-            id,
-            name,
-            email,
-            isOng,
-            avatarURL
-          })
-        }).catch(error => {
-          console.log(error)
-        })
-    }
+    //       setUser({
+    //         id,
+    //         name,
+    //         email,
+    //         isOng,
+    //         avatarURL
+    //       })
+    //     }).catch(error => {
+    //       console.log(error)
+    //     })
+    // }
   }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials)  => {

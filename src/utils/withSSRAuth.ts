@@ -19,7 +19,7 @@ export function withSSRAuth(fn: GetServerSideProps) {
     try {
       return await fn(ctx)
     } catch (error) {
-      console.log(error)
+      console.log('houve um erro na server side da rota',error.response?.data)
 
       if (error instanceof AuthTokenError) {
         destroyCookie(
@@ -35,6 +35,12 @@ export function withSSRAuth(fn: GetServerSideProps) {
             destination: '/',
             permanent: false
           }
+        }
+      }
+
+      return {
+        props: {
+
         }
       }
 

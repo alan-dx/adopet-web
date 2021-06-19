@@ -3,6 +3,7 @@ import { Header } from "../../components/Header";
 import { Card } from "../../components/Card";
 import Head from "next/head";
 import { withSSRAuth } from "../../utils/withSSRAuth";
+import { setupApiClient } from "../../services/api";
 
 const Feed = () => {
   return (
@@ -24,9 +25,23 @@ const Feed = () => {
   );
 };
 
-export const getServerSideProps = withSSRAuth(async () => {
+export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   //TODO: fazer as requisições de listagem do feed
+
+  // const response = await api.get('/profile').then(res => {
+  //   const { name } = res.data
+  //   console.log(name)
+  // })
+
+  const api = setupApiClient(ctx)
+
+  //Requisição pelo SERVER SIDE do next
+  const response = await api.post('/refresh-token').then(res => {
+    console.log('sucesso')
+  }).catch(error => {
+    console.log('erro na rota profile', error.response.data)
+  })
 
   return {
     props: {
