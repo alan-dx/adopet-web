@@ -1,5 +1,5 @@
 import {
-  Container,
+  Box,
   Flex,
   Text,
   Avatar,
@@ -7,22 +7,21 @@ import {
   Image,
   IconButton,
   Button,
-  Icon,
 } from '@chakra-ui/react';
 import { FiHeart, FiShare2 } from 'react-icons/fi';
 
 const Card = () => {
   return (
-    <Container bg='white' maxW='full' borderRadius='md' p='0' boxShadow='xl'>
-      <Flex direction='column' py='4'>
-        <Flex align='center' justify='space-between' px='4'>
+    <Box bg='white' width='full' borderRadius='md' boxShadow='xl'>
+      <Flex direction='column' py={4}>
+        <Flex align='center' justify='space-between' px={4}>
           <Flex align='center'>
             <Avatar
               size='md'
               name='Abrigo Flora e Fauna'
               src='https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/k-p-1-ae-0036.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=b52c28c28aa88a6e524455c80ea9ed85'
             />
-            <Text color='gray.700' fontWeight='medium' ml='4'>
+            <Text color='gray.700' fontWeight='medium' ml={4}>
               Abrigo Flora e Fauna
             </Text>
           </Flex>
@@ -30,8 +29,8 @@ const Card = () => {
           <Text color='gray.500'>30 min</Text>
         </Flex>
 
-        <Text fontSize='sm' color='gray.500' px='4' py='2'>
-          Cleiton e um doguinho muito simpatico e feliz, gosta muito de brincar
+        <Text fontSize='sm' color='gray.500' px={4} noOfLines={1} mb={2}>
+          Cleiton e um doguinho muito simpatico e feliz e gosta muito de brincar
           e morder a canela dos outros.
         </Text>
 
@@ -45,19 +44,23 @@ const Card = () => {
         <Flex align='center' justify='space-between' px={[2, 4]}>
           <Flex align='center'>
             <IconButton variant='ghost' aria-label='Like' icon={<FiHeart />} />
-            <Text color='gray.500'>35 curtidas</Text>
+            <Text color='gray.500'>35</Text>
+
+            <IconButton
+              ml={4}
+              color='gray.500'
+              variant='ghost'
+              aria-label='Share'
+              icon={<FiShare2 />}
+            />
           </Flex>
 
-          <Flex align='center'>
-            <Button variant='ghost' aria-label='Share' leftIcon={<FiShare2 />}>
-              <Text fontWeight='normal' color='gray.500'>
-                Compartilhar
-              </Text>
-            </Button>
-          </Flex>
+          <Button bg='purple.500' color='gray.50' px={8}>
+            Adotar
+          </Button>
         </Flex>
       </Flex>
-    </Container>
+    </Box>
   );
 };
 
