@@ -1,64 +1,104 @@
 import {
   Box,
   Flex,
-  Text,
   Avatar,
+  Text,
   AspectRatio,
   Image,
   IconButton,
   Button,
+  Divider,
 } from '@chakra-ui/react';
 import { FiHeart, FiShare2 } from 'react-icons/fi';
+import { ActionButton } from '../ActionButton';
 
-const Card = () => {
+interface CardProps {
+  avatar: string;
+  name: string;
+  postedIn: string;
+  image: string;
+  description: string;
+  isFeed?: boolean;
+}
+
+const Card = ({
+  avatar,
+  name,
+  postedIn,
+  image,
+  description,
+  isFeed,
+}: CardProps) => {
   return (
-    <Box bg='white' width='full' borderRadius='md' boxShadow='xl'>
-      <Flex direction='column' py={4}>
-        <Flex align='center' justify='space-between' px={4}>
-          <Flex align='center'>
-            <Avatar
-              size='md'
-              name='Abrigo Flora e Fauna'
-              src='https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/k-p-1-ae-0036.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=b52c28c28aa88a6e524455c80ea9ed85'
-            />
-            <Text color='gray.700' fontWeight='medium' ml={4}>
-              Abrigo Flora e Fauna
+    <Box bg="white" width="full" borderRadius="md" boxShadow="xl">
+      <Flex direction="column" py={4}>
+        <Flex as="header" align="center" justify="space-between" px={4}>
+          <Flex align="center">
+            <Avatar size="md" name={name} src={avatar} />
+            <Text color="gray.700" fontWeight="medium" ml={4}>
+              {name}
             </Text>
           </Flex>
 
-          <Text color='gray.500'>30 min</Text>
+          <Text color="gray.500">{postedIn} min</Text>
         </Flex>
 
-        <Text fontSize='sm' color='gray.500' px={4} noOfLines={1} mb={2}>
-          Cleiton e um doguinho muito simpatico e feliz e gosta muito de brincar
-          e morder a canela dos outros.
-        </Text>
+        {isFeed && (
+          <Text fontSize="sm" color="gray.500" px={4} noOfLines={1}>
+            {description}
+          </Text>
+        )}
 
-        <AspectRatio ratio={4 / 3}>
-          <Image
-            src='https://i.guim.co.uk/img/media/fe1e34da640c5c56ed16f76ce6f994fa9343d09d/0_174_3408_2046/master/3408.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=0d3f33fb6aa6e0154b7713a00454c83d'
-            alt='puppy'
-          />
+        <AspectRatio
+          ratio={4 / 3}
+          borderY="1px"
+          borderColor="gray.200"
+          my={[2, 4]}
+        >
+          <Image src={image} alt="Animal image" />
         </AspectRatio>
 
-        <Flex align='center' justify='space-between' px={[2, 4]}>
-          <Flex align='center'>
-            <IconButton variant='ghost' aria-label='Like' icon={<FiHeart />} />
-            <Text color='gray.500'>35</Text>
+        {isFeed ? (
+          <Flex align="center" justify="space-between" px={[2, 4]}>
+            <Flex align="center">
+              <IconButton
+                variant="ghost"
+                aria-label="Like"
+                icon={<FiHeart />}
+              />
+              <Text color="gray.500">35</Text>
 
-            <IconButton
-              ml={4}
-              color='gray.500'
-              variant='ghost'
-              aria-label='Share'
-              icon={<FiShare2 />}
-            />
+              <IconButton
+                ml={4}
+                color="gray.500"
+                variant="ghost"
+                aria-label="Share"
+                icon={<FiShare2 />}
+              />
+            </Flex>
+
+            <Button bg="purple.500" color="gray.50" px={8}>
+              Adotar
+            </Button>
           </Flex>
+        ) : (
+          <Box px={4}>
+            <Text as="span" color="gray.500">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus
+              enim eaque blanditiis minus eum distinctio itaque rerum, dicta
+              esse repellendus aperiam maiores, non earum eos sint. Nulla
+              laborum est saepe at perferendis sint. Sit distinctio velit
+              aliquid magnam atque commodi facere, expedita nobis numquam
+              veritatis voluptatem cumque earum sed animi.
+            </Text>
 
-          <Button bg='purple.500' color='gray.50' px={8}>
-            Adotar
-          </Button>
-        </Flex>
+            <Divider my={4} />
+
+            <Box maxW={400} mx="auto">
+              <ActionButton>Adotar</ActionButton>
+            </Box>
+          </Box>
+        )}
       </Flex>
     </Box>
   );
