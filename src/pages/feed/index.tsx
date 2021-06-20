@@ -55,27 +55,17 @@ const Feed = () => {
   );
 };
 
-// export const getServerSideProps = withSSRAuth(async (ctx) => {
-//TODO: fazer as requisições de listagem do feed
+export const getServerSideProps = withSSRAuth(async (ctx) => {
 
-// const response = await api.get('/profile').then(res => {
-//   const { name } = res.data
-//   console.log(name)
-// })
+  const api = setupApiClient(ctx)
+  
+  const response = await api.get('/feeds')
 
-// const api = setupApiClient(ctx)
+  console.log(response.data)
 
-
-const response = await api.get('/profile').then(res => {
-  console.log(res.data.name)
-}).catch(error => {
-  console.log('erro na rota /profile', error.response.data)
-})
-
-
-//   return {
-//     props: {},
-//   };
-// });
+  return {
+    props: {},
+  }
+});
 
 export default Feed;

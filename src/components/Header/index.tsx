@@ -24,6 +24,8 @@ interface HeaderProps {
 const Header = ({ title }: HeaderProps) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
 
+  const { user } = useContext(AuthContext)
+
   const { signOutByContext } = useContext(AuthContext);
 
   const isDesktop = useBreakpointValue({
@@ -44,12 +46,12 @@ const Header = ({ title }: HeaderProps) => {
           <Flex align="center">
             <Avatar
               size="md"
-              src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e"
-              name="Della Case"
+              src={`${user?.avatarURL}`}
+              name={`${user?.name}`}
             />
             {isDesktop && (
               <Text fontSize="xl" color="gray.50" ml={4}>
-                Della Case
+                {user?.name}
               </Text>
             )}
           </Flex>

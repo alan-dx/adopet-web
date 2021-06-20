@@ -36,7 +36,6 @@ export function setupApiClient(ctx = undefined) {
 
           api.post('refresh-token')
           .then((response => {
-            console.log('sucesso na rota de refresh')
             const {token} = response.data
 
             if (!process.browser) {
@@ -88,7 +87,6 @@ export function setupApiClient(ctx = undefined) {
         })
 
       } else {
-        console.log('erro', error.response.data?.message)
         if (process.browser) {
           signOut()
         } else {
