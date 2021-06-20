@@ -65,12 +65,13 @@ const Feed = () => {
 
 // const api = setupApiClient(ctx)
 
-//Requisição pelo SERVER SIDE do next
-// const response = await api.post('/refresh-token').then(res => {
-//   console.log('sucesso')
-// }).catch(error => {
-//   console.log('erro na rota profile', error.response.data)
-// })
+
+const response = await api.get('/profile').then(res => {
+  console.log(res.data.name)
+}).catch(error => {
+  console.log('erro na rota /profile', error.response.data)
+})
+
 
 //   return {
 //     props: {},

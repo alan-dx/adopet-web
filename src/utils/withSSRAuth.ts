@@ -19,7 +19,7 @@ export function withSSRAuth(fn: GetServerSideProps) {
     try {
       return await fn(ctx)
     } catch (error) {
-      console.log('houve um erro na server side da rota',error.response?.data)
+      console.log('houve um erro na server side da rota',error)
 
       if (error instanceof AuthTokenError) {
         destroyCookie(
