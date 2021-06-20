@@ -65,7 +65,6 @@ function Profile() {
         onSubmit={handleSubmit(handleProfileUpdate)}
       >
         <ImageUpload
-          multiple
           control={control}
           error={errors.image}
           register={register('image')}
