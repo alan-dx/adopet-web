@@ -11,7 +11,7 @@ import {
   useDisclosure,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { FiPlus, FiPower, FiArrowLeft } from 'react-icons/fi';
 import { AuthContext } from '../../contexts/AuthContext';
@@ -101,6 +101,7 @@ const Header = ({ title, isFeed }: HeaderProps) => {
                 </Button>
               ) : (
                 <Button
+                  data-testid="new-post-button"
                   variant="unstyled"
                   _hover={{ bg: 'purple.400' }}
                   onClick={() => onOpen()}

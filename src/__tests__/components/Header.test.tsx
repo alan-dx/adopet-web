@@ -15,7 +15,7 @@ describe('<Header />', () => {
   });
 
   it('should open the ModalNewPost when the user clicks on new post button', () => {
-    renderWithChackraProvider(Header, props);
+    renderWithChackraProvider(Header, { ...props, isFeed: true });
 
     const newPostButton = screen.getByTestId('new-post-button');
 

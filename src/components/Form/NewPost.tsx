@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid, Divider } from '@chakra-ui/react';
+import { Flex, SimpleGrid, Divider, useToast } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { api } from '../../services/apiClient';
@@ -23,12 +23,11 @@ type NewPostData = {
 };
 
 const newPostData = Yup.object().shape({
-  nome: Yup.string().required('Nome obrigatório'),
+  title: Yup.string().required('Título obrigatório'),
   description: Yup.string().required('Descrição obrigatória'),
   animalType: Yup.string().required('Espécie obrigatória'),
   animalBreed: Yup.string().required('Raça obrigatória'),
   age: Yup.number().required('Idade obrigatória'),
-  image: Yup.object().required('Imagem obrigatória'),
 });
 
 const NewPost = ({ closeModal }: NewPostProps) => {
@@ -37,7 +36,10 @@ const NewPost = ({ closeModal }: NewPostProps) => {
     handleSubmit,
     formState: { errors, isSubmitting },
     control,
+    reset,
   } = useForm({ resolver: yupResolver(newPostData) });
+
+  const toast = useToast();
 
   const queryClient = useQueryClient();
   const mutation = useMutation(
@@ -48,8 +50,6 @@ const NewPost = ({ closeModal }: NewPostProps) => {
     },
     {
       onSuccess: () => {
-        alert('Post criado com sucesso.');
-        closeModal();
         queryClient.invalidateQueries('donations');
       },
     }
@@ -70,7 +70,28 @@ const NewPost = ({ closeModal }: NewPostProps) => {
     formData.append('animalBreed', animalBreed);
     formData.append('age', age);
 
-    await mutation.mutateAsync(formData);
+    try {
+      await mutation.mutateAsync(formData);
+
+      toast({
+        title: 'Novo post cadastrado',
+        description: 'Seu post foi cadastrado com sucesso.',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      });
+    } catch {
+      toast({
+        title: 'Falha no cadastro',
+        description: 'Ocorreu um erro ao tentar cadastrar a seu post.',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+    } finally {
+      reset();
+      closeModal();
+    }
   };
 
   return (
@@ -107,6 +128,7 @@ const NewPost = ({ closeModal }: NewPostProps) => {
         />
         <Input
           placeholder="Idade"
+          data-testid="age-input"
           name="age"
           type="number"
           error={errors.age}
