@@ -77,7 +77,7 @@ const Card = ({
               />
             </Flex>
 
-            <Button bg="purple.500" color="gray.50" px={8}>
+            <Button bg="green.300" color="gray.50" px={8}>
               Adotar
             </Button>
           </Flex>

@@ -1,4 +1,4 @@
-import { Flex, VStack } from '@chakra-ui/react';
+import { Flex, VStack, Button } from '@chakra-ui/react';
 import Head from 'next/head';
 
 import { Card } from '../../components/Card';
@@ -44,15 +44,23 @@ const Feed = ({donations}: FeedProps) => {
     hasNextPage
   } = useInfiniteQuery(
     'donations',
-    async () => {
-      const response = await api.get('/feeds')
+    async ({pageParam = 0}) => {
+      const response = await api.get('/feeds', {
+        params: {
+          limit: 4,
+          page: pageParam
+        }
+      })
 
       return response.data
     },
     {
-      getNextPageParam: (lastpage) => {
+      getNextPageParam: (lastPage) => {
+        if (!lastPage.links.next) {
+          return null
+        }
 
-        return null
+        return lastPage.links.next.slice(-1)
       }
     }
   )
@@ -60,6 +68,10 @@ const Feed = ({donations}: FeedProps) => {
   const formattedData = useMemo(() => {
     return data?.pages.map(page => page.results).flat()
   }, [data])
+
+  function handleScroll(event) {
+    console.log('oi')
+  }
 
   return (
     <>
@@ -95,6 +107,24 @@ const Feed = ({donations}: FeedProps) => {
           <CardsList data={formattedData} />
 
         </VStack>
+        {
+          hasNextPage
+          &&
+          <Button
+            my={6}
+            isLoading={isFetchingNextPage}
+            loadingText="Carregando..."
+            bg="purple.500"
+            color="gray.50"
+            _hover={{
+              backgroundColor: "purple.600"
+            }}
+            onClick={() => fetchNextPage()}
+            px={6}
+          >
+            Carregar mais
+          </Button>
+        }
       </Flex>
     </>
   );
