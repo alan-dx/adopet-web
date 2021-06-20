@@ -62,10 +62,10 @@ const Header = ({ title, isFeed }: HeaderProps) => {
               </Flex>
             ) : (
               <Flex align="center">
-                <Button onClick={() => router.back()} bg="transparent" _hover={{backgroundColor: 'purple.700'}}>
-                  <Icon as={FiArrowLeft} color="gray.50" boxSize={5} />
+                <Button display="flex" flexDirection="column" onClick={() => router.back()} bg="purple.500" _hover={{backgroundColor: 'purple.600'}}>
+                  <Icon as={FiArrowLeft} alignSelf="flex-start" color="gray.50" boxSize={5} />
                 </Button>
-                <Text fontSize="xl" color="gray.50" ml={2}>Voltar</Text>
+                <Text fontSize={"sm"} color="gray.50" ml={2} display={["none", "block"]} >Voltar</Text>
               </Flex>
             )
           }
