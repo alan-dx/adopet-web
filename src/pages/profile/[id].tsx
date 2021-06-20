@@ -1,4 +1,4 @@
-import { Flex, Box, Stack } from '@chakra-ui/react';
+import { Flex, Text, Box, Stack } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import Head from 'next/head';
 import * as yup from 'yup';
@@ -11,7 +11,7 @@ import { ImageUpload } from '../../components/FileUpload';
 import { FiCheckCircle, FiLock, FiMail } from 'react-icons/fi';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-type NewPostData = {
+type UpdateProfileData = {
   image: FileList;
   nome: string;
   email: string;
@@ -37,7 +37,7 @@ function Profile() {
     control,
   } = useForm({ resolver: yupResolver(profileFormSchema) });
 
-  const handleProfileUpdate: SubmitHandler<NewPostData> = async (
+  const handleProfileUpdate: SubmitHandler<UpdateProfileData> = async (
     values,
     event
   ) => {
@@ -71,6 +71,7 @@ function Profile() {
           register={register('image')}
           avatar="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e"
         />
+
         <Flex
           direction="column"
           align="center"
