@@ -1,4 +1,4 @@
-import { Flex, VStack, Button } from '@chakra-ui/react';
+import { Flex, VStack, Button, Spinner } from '@chakra-ui/react';
 import Head from 'next/head';
 
 import { Card } from '../../components/Card';
@@ -12,29 +12,7 @@ import { api } from '../../services/apiClient';
 import { useMemo } from 'react';
 import { CardsList } from '../../components/CardsList';
 
-export type DonationPost = {
-  id: string;
-  title: string;
-  description: string;
-  animalType: string;
-  animalBreed: string;
-  createdAt: string;
-  age: string;
-  user: {
-    name: string
-  };
-  images: {
-    id: string;
-    imageURL: string
-  }[];
-  wasAdopted: boolean
-}
-
-interface FeedProps {
-  donations: DonationPost[] 
-}
-
-const Feed = ({donations}: FeedProps) => {
+const Feed = ({donations}) => {
 
   const { 
     data,
@@ -61,16 +39,17 @@ const Feed = ({donations}: FeedProps) => {
         }
 
         return lastPage.links.next.slice(-1)
-      }
+      },
+      initialData: donations
     }
   )
 
   const formattedData = useMemo(() => {
-    return data?.pages.map(page => page.results).flat()
+    return data?.pages?.map(page => page.results).flat()
   }, [data])
 
-  function handleScroll(event) {
-    console.log('oi')
+  if (isLoading) {
+    return <Spinner size="xl" />
   }
 
   return (
@@ -97,14 +76,24 @@ const Feed = ({donations}: FeedProps) => {
           spacing={4}
           mt={[16, 0]}
         >
-          <Donation
-            src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e"
-            name="Abrigo Proteger"
-            progress={20}
-            description="Precisamos de doação para um cirurgia em"
-          />
-
-          <CardsList data={formattedData} />
+          {
+            isLoading
+            ?
+              <Spinner size="sm" color="gray.700" />
+            :
+            (
+              <>
+                <Donation
+                  src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e"
+                  name="Abrigo Proteger"
+                  progress={20}
+                  description="Precisamos de doação para um cirurgia em"
+                />
+      
+                <CardsList data={formattedData} />
+              </>
+            )
+          }
 
         </VStack>
         {
@@ -134,9 +123,13 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   const api = setupApiClient(ctx)
   
-  const response = await api.get('/feeds')
+  const response = await api.get('/feeds', {
+    params: {
+      limit: 4
+    }
+  })
 
-  const donations = response.data.results
+  const donations = response.data
 
   return {
     props: {

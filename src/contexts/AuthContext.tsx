@@ -62,7 +62,6 @@ export function AuthProvider({children}:AuthProviderProps) {
     if (token) {
         api.get('/profile').then(response => {
           const { name, email, id, isOng, avatarURL } = response.data
-          console.log(name)
   
           setUser({
             id,

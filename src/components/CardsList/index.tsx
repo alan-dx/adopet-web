@@ -1,7 +1,24 @@
 import { Card } from '../Card';
-import { DonationPost } from '../../pages/feed'
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+
+type DonationPost = {
+  id: string;
+  title: string;
+  description: string;
+  animalType: string;
+  animalBreed: string;
+  createdAt: string;
+  age: string;
+  user: {
+    name: string
+  };
+  images: {
+    id: string;
+    imageURL: string
+  }[];
+  wasAdopted: boolean
+}
 
 interface CardListProps {
   data: DonationPost[]
