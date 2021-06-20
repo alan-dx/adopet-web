@@ -82,6 +82,7 @@ const Header = ({ title }: HeaderProps) => {
               </Button>
             ) : (
               <Button
+                data-testid="new-post-button"
                 variant="unstyled"
                 _hover={{ bg: 'purple.400' }}
                 onClick={() => onOpen()}
