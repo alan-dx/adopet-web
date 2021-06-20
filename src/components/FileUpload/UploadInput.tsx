@@ -25,6 +25,7 @@ const UploadInput = ({
   return (
     <InputGroup onClick={handleClick} w="auto">
       <input
+        data-testid="image-upload-input"
         type={'file'}
         multiple={multiple}
         hidden

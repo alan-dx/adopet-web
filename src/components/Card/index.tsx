@@ -86,12 +86,7 @@ const Card = ({
         ) : (
           <Box px={4}>
             <Text as="span" color="gray.500">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus
-              enim eaque blanditiis minus eum distinctio itaque rerum, dicta
-              esse repellendus aperiam maiores, non earum eos sint. Nulla
-              laborum est saepe at perferendis sint. Sit distinctio velit
-              aliquid magnam atque commodi facere, expedita nobis numquam
-              veritatis voluptatem cumque earum sed animi.
+              {description}
             </Text>
 
             <Divider my={4} />
