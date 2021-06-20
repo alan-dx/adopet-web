@@ -1,6 +1,8 @@
-import { Flex, Stack, Divider } from '@chakra-ui/react';
+import { Flex, Stack, SimpleGrid, Divider } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { FiPhone } from 'react-icons/fi';
+import { useMutation, useQueryClient } from 'react-query';
+import { api } from '../../services/apiClient';
 
 import { ActionButton } from '../ActionButton';
 import { ImageUpload } from '../FileUpload';
@@ -11,10 +13,12 @@ interface NewPostProps {
 }
 
 type NewPostData = {
-  image: FileList;
-  nome: string;
+  images: FileList;
+  title: string;
   description: string;
-  phone: string;
+  animalType: string;
+  animalBreed: string;
+  age: string
 };
 
 const NewPost = ({ closeModal }: NewPostProps) => {
@@ -26,7 +30,7 @@ const NewPost = ({ closeModal }: NewPostProps) => {
   } = useForm();
 
   const formValidations = {
-    nome: {
+    title: {
       required: 'Nome obrigatório',
       minLength: {
         value: 2,
@@ -40,18 +44,32 @@ const NewPost = ({ closeModal }: NewPostProps) => {
     description: {
       required: 'Descrição obrigatória',
       maxLength: {
-        value: 65,
-        message: 'Máximo de 65 caracteres',
+        value: 400,
+        message: 'Máximo de 400 caracteres',
       },
     },
-    phone: {
-      required: 'Telefone obrigatório',
+    animalType: {
+      required: 'Espécie obrigatória',
       minLength: {
-        value: 11,
+        value: 1,
         message: 'Mínimo de 1 caracteres',
       },
     },
-    image: {
+    animalBreed: {
+      required: 'Raça obrigatória',
+      minLength: {
+        value: 1,
+        message: 'Mínimo de 1 caracteres',
+      },
+    },
+    age: {
+      required: 'Idade obrigatória',
+      maxLength: {
+        value: 3,
+        message: 'Máximo de 3 números',
+      },
+    },
+    images: {
       required: 'Arquivo obrigatório',
       validate: {
         lessThan10MB: (image: FileList) => {
@@ -69,60 +87,101 @@ const NewPost = ({ closeModal }: NewPostProps) => {
     },
   };
 
-  const handleSignIn: SubmitHandler<NewPostData> = async (values, event) => {
-    console.log(values);
+  const queryClient = useQueryClient()
+  const mutation = useMutation(async (formData: FormData) => {
+    console.log(formData)
+    const response = await api.post('/donations', formData)
+
+    return response.data
+  },{
+    onSuccess: () => {
+      alert('Post criado com sucesso.')
+      queryClient.invalidateQueries('donations')
+    }
+  })
+
+  const handleNewPost: SubmitHandler<NewPostData> = async (values, event) => {
+    const { title, images, description, animalType, animalBreed, age } = values
+    console.log(title)
+
+    const formData = new FormData()
+
+    for (var index = 0; index < images.length; ++index) {
+      var file = images.item(index);
+      formData.append('images', file)
+    }
+
+    formData.append('title', title)
+    formData.append('description', description)
+    formData.append('animalType', animalType)
+    formData.append('animalBreed', animalBreed)
+    formData.append('age', age)
+
+    await mutation.mutateAsync(formData)
     closeModal();
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSignIn)}>
       <Flex
+        as="form"
         direction='column'
-        align='center'
-        p={[4, 8]}
+        p={4}
         bg='white'
-        mb={[4, 8]}
+        mb={2}
         borderRadius='md'
+        onSubmit={handleSubmit(handleNewPost)}
       >
-        <Stack width='full' mb={[4, 8]}>
-          <Input
-            placeholder='Nome'
-            name='nome'
-            type='text'
-            error={errors.nome}
-            {...register('nome', formValidations.nome)}
-          />
+        <SimpleGrid columns={2} spacing={2} mb={2}>
+            <Input
+              placeholder='Nome'
+              name='title'
+              type='text'
+              error={errors.title}
+              {...register('title', formValidations.title)}
+            />
+            <Input
+              placeholder='Espécie'
+              name='animalType'
+              type='text'
+              error={errors.animalType}
+              {...register('animalType', formValidations.animalType)}
+            />
+            <Input
+              placeholder='Raça'
+              name='animalBreed'
+              type='text'
+              error={errors.animalBreed}
+              {...register('animalBreed', formValidations.animalBreed)}
+            />
+            <Input
+              placeholder='Idade'
+              name='age'
+              type='number'
+              error={errors.age}
+              {...register('age', formValidations.age)}
+            />
+          </SimpleGrid>
           <Input
             placeholder='Descrição'
             name='description'
+            mb={2}
             type='text'
             error={errors.description}
             {...register('description', formValidations.description)}
           />
-          <Input
-            placeholder='Número de telefone'
-            name='phone'
-            type='number'
-            icon={FiPhone}
-            error={errors.phone}
-            {...register('phone', formValidations.phone)}
-          />
-
           <Divider />
 
           <ImageUpload
             multiple
             control={control}
-            error={errors.image}
-            register={register('image', formValidations.image)}
+            error={errors.images}
+            register={register('images', formValidations.images)}
           />
-        </Stack>
 
         <ActionButton type='submit' isLoading={isSubmitting}>
           Enviar
         </ActionButton>
       </Flex>
-    </form>
   );
 };
 

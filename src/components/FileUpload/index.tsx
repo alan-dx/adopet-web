@@ -7,7 +7,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Icon,
-  AspectRatio,
+  Box,
   Image,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ const ImageUpload = ({
 }: ImageUploadProps) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
 
-  const watchImages = useWatch({ control, name: 'image' });
+  const watchImages = useWatch({ control, name: 'images' });
 
   useEffect(() => {
     if (watchImages) {
@@ -52,17 +52,17 @@ const ImageUpload = ({
   return (
     <FormControl isInvalid={!!error}>
       {!avatar && (
-        <FormLabel color="gray.600" textAlign="center">
+        <FormLabel color="gray.600" textAlign="center" mt={2}>
           {'Adicionar foto'}
         </FormLabel>
       )}
 
       {previewImages.length !== 0 && !avatar && (
-        <Stack direction="row" overflowX="scroll" spacing={4}>
+        <Stack direction="row" justify="center" overflowX="scroll" spacing={4}>
           {previewImages?.map((image) => (
-            <AspectRatio key={image} ratio={4 / 3} flex={1} minWidth="xs">
+            <Box display="flex" key={image} boxSize={["48","48"]} alignItems="center">
               <Image src={image} borderRadius={8} />
-            </AspectRatio>
+            </Box>
           ))}
         </Stack>
       )}

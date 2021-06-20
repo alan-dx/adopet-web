@@ -73,6 +73,7 @@ export function AuthProvider({children}:AuthProviderProps) {
           })
         }).catch(error => {
           console.log(error)
+          signOut()
         })
     }
   }, [])

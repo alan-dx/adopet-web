@@ -20,16 +20,16 @@ const ModalNewPost = ({ isOpen, onClose }: ModalNewPostProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={handleCloseModal} isCentered>
+    <Modal isOpen={isOpen} onClose={handleCloseModal} isCentered size={"4xl"} >
       <ModalOverlay />
-      <ModalContent bgColor="purple.500">
-        <ModalHeader color="gray.50" fontSize="xl">
+      <ModalContent bgColor="purple.500" >
+        <ModalHeader color="gray.50" fontSize="md">
           Novo post
         </ModalHeader>
 
         <ModalCloseButton color="gray.50" />
 
-        <ModalBody>
+        <ModalBody >
           <NewPost closeModal={handleCloseModal} />
         </ModalBody>
       </ModalContent>

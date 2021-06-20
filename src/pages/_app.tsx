@@ -8,14 +8,13 @@ import { queryClient } from '../services/queryClient'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider resetCSS theme={theme}>
-      <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Component {...pageProps} />
-          </AuthProvider>
-          <ReactQueryDevtools />
-      </QueryClientProvider>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider resetCSS theme={theme}>
+            <AuthProvider>
+              <Component {...pageProps} />
+            </AuthProvider>
+      </ChakraProvider>
+    </QueryClientProvider>
   )
 }
 

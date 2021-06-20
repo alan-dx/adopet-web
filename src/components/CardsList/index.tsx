@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Card } from '../Card';
 import { DonationPost } from '../../pages/feed'
 import { useContext } from 'react';
@@ -18,7 +17,7 @@ export function CardsList({data}: CardListProps) {
         return (
           <Card
             key={donation.id}
-            name={user?.name}
+            name={donation.user.name}
             image={donation.images[0].imageURL}
             postedIn="30"
             description={donation.description}

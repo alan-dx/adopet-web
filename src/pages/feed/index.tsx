@@ -20,6 +20,9 @@ export type DonationPost = {
   animalBreed: string;
   createdAt: string;
   age: string;
+  user: {
+    name: string
+  };
   images: {
     id: string;
     imageURL: string
