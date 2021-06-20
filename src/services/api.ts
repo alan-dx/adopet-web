@@ -1,7 +1,10 @@
+import { AuthTokenError } from './errors/AuthTokenError';
 import axios, { AxiosError } from 'axios'
 import { parseCookies, setCookie } from 'nookies'
+import { signOut } from '../contexts/AuthContext'
 
 let isRefreshing = false
+let failedRequestsQueue = []
 
 export function setupApiClient(ctx = undefined) {
   let cookies = parseCookies(ctx)
@@ -14,43 +17,74 @@ export function setupApiClient(ctx = undefined) {
     withCredentials: true
   })
     
-  // api.interceptors.response.use(response => {
-  //   console.log('inteceptor success')
-  //   return response
-  // }, (error: AxiosError) => {
-  //   console.log('inteceptor error')
+  api.interceptors.response.use(response => {
+    return response
+  }, (error: AxiosError) => {
 
-  //   if (error.response.status === 401) {
-  //     if (error.response.data?.message === 'Invalid JWT token.') {
-  //       cookies = parseCookies(ctx)//AC
+    if (error.response.status === 401) {
+      if (error.response.data?.message === 'Invalid JWT token.' || 'Invalid Token') {
+        cookies = parseCookies(ctx)//AC
 
-  //       const originalConfig = error.config
+        const originalConfig = error.config
 
-  //       if (!isRefreshing) {
-  //         isRefreshing = true
+        if (!process.browser) {//cookies httpOnly are not sent by default on requests made by the next server-side
+          api.defaults.headers.Cookie = `rtid=${cookies.rtid};uid=${cookies.uid}`
+        }
 
-  //         api.post('refresh-token')
-  //         .then((response => {
-  //           console.log('sucesso na rota de refresh', response.data)
+        if (!isRefreshing) {
+          isRefreshing = true
 
-  //           setCookie(ctx, 'adopet.token', response.data.token, {
-  //             maxAge: 60*60*24*30,
-  //             path: '/'
-  //           })
+          api.post('refresh-token')
+          .then((response => {
+            console.log('sucesso na rota de refresh', response)
+            const {token} = response.data
 
-  //           api.defaults.headers['Authorization'] = `Bearer ${response.data.token}`
+            setCookie(ctx, 'adopet.token', token, {
+              maxAge: 60*60*24*30,
+              path: '/'
+            })
 
-  //         })).catch(error => {
-  //           console.log('erro na rota de refresh', error)
-  //         })
+            api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-  //       }
+            failedRequestsQueue.forEach(request => request.onSuccess(token))
+            failedRequestsQueue = []
+          })).catch(error => {
+            failedRequestsQueue.forEach(request => request.onSuccess(error))
+            failedRequestsQueue = []
+            
+            if (process.browser) {
+              signOut()
+            }
+          }).finally(() => {
+            isRefreshing = false
+          })
+        }
 
-  //     } else {
-  //       console.log(error.response.data?.message)
-  //     }
-  //   }
-  // })
+        return new Promise((resolve, reject) => {
+          failedRequestsQueue.push({
+            onSuccess: (token: string) => {
+              originalConfig.headers['Authorization'] = `Bearer ${token}`
+
+              resolve(api(originalConfig))
+            },
+            onFailure: (error: AxiosError) => {
+              reject(error)
+            }
+          })
+        })
+
+      } else {
+        console.log('erro', error.response.data?.message)
+        if (process.browser) {
+          signOut()
+        } else {
+          return Promise.reject(new AuthTokenError())
+        }
+      }
+    }
+
+    return Promise.reject(error)
+  })
 
 
   return api

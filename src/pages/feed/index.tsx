@@ -36,11 +36,10 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   const api = setupApiClient(ctx)
 
-  //Requisição pelo SERVER SIDE do next
-  const response = await api.post('/refresh-token').then(res => {
-    console.log('sucesso')
+  const response = await api.get('/profile').then(res => {
+    console.log(res.data.name)
   }).catch(error => {
-    console.log('erro na rota profile', error.response.data)
+    console.log('erro na rota /profile', error.response.data)
   })
 
   return {

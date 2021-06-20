@@ -37,22 +37,22 @@ type SignUpCredentials = {
 }
 
 export function signOut() {
-  // destroyCookie(
-  //   undefined,
-  //   'adopet.token',
-  //   {
-  //     path: '/'
-  //   }
-  // )
+  destroyCookie(
+    undefined,
+    'adopet.token',
+    {
+      path: '/'
+    }
+  )
 
-  // Router.push('/signin')
+  Router.push('/signin')
 
-  //TESTES DA ROTA REFRESH-TOKEN
-  api.post('refresh-token').then(response => {
-    console.log(response)
-  }).catch(error => {
-    console.log(error)
-  })
+  // //TESTES DA ROTA REFRESH-TOKEN
+  // api.post('refresh-token').then(response => {
+  //   console.log(response)
+  // }).catch(error => {
+  //   console.log(error)
+  // })
 
 }
 
