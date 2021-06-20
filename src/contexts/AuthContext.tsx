@@ -85,13 +85,13 @@ export function AuthProvider({children}:AuthProviderProps) {
         password
       })
 
-      const {token, user: { id, name, avatarURL }} = response.data
-
+      const {token, user: { id, name, avatarURL, isOng }} = response.data
+      console.log(user)
       setUser({
         id,
         name,
         email,
-        isOng: false, //REMOVER
+        isOng,
         avatarURL
       })
 

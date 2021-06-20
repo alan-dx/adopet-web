@@ -7,8 +7,57 @@ import { Donation } from '../../components/Donation';
 
 import { setupApiClient } from '../../services/api';
 import { withSSRAuth } from '../../utils/withSSRAuth';
+import { useInfiniteQuery } from 'react-query';
+import { api } from '../../services/apiClient';
+import { useMemo } from 'react';
+import { CardsList } from '../../components/CardsList';
 
-const Feed = () => {
+export type DonationPost = {
+  id: string;
+  title: string;
+  description: string;
+  animalType: string;
+  animalBreed: string;
+  createdAt: string;
+  age: string;
+  images: {
+    id: string;
+    imageURL: string
+  }[];
+  wasAdopted: boolean
+}
+
+interface FeedProps {
+  donations: DonationPost[] 
+}
+
+const Feed = ({donations}: FeedProps) => {
+
+  const { 
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage
+  } = useInfiniteQuery(
+    'donations',
+    async () => {
+      const response = await api.get('/feeds')
+
+      return response.data
+    },
+    {
+      getNextPageParam: (lastpage) => {
+
+        return null
+      }
+    }
+  )
+
+  const formattedData = useMemo(() => {
+    return data?.pages.map(page => page.results).flat()
+  }, [data])
+
   return (
     <>
       <Head>
@@ -40,15 +89,8 @@ const Feed = () => {
             description="Precisamos de doação para um cirurgia em"
           />
 
-          <Card
-            name="Abrigo Flora e Fauna"
-            image="https://i.guim.co.uk/img/media/fe1e34da640c5c56ed16f76ce6f994fa9343d09d/0_174_3408_2046/master/3408.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=0d3f33fb6aa6e0154b7713a00454c83d"
-            postedIn="30"
-            description="Cleiton e um doguinho muito simpatico e feliz e gosta muito de brincar
-          e morder a canela dos outros."
-            avatar="https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/k-p-1-ae-0036.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=b52c28c28aa88a6e524455c80ea9ed85"
-            isFeed
-          />
+          <CardsList data={formattedData} />
+
         </VStack>
       </Flex>
     </>
@@ -61,10 +103,12 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
   
   const response = await api.get('/feeds')
 
-  console.log(response.data)
+  const donations = response.data.results
 
   return {
-    props: {},
+    props: {
+      donations
+    },
   }
 });
 

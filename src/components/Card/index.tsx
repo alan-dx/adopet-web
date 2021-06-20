@@ -50,12 +50,12 @@ const Card = ({
         )}
 
         <AspectRatio
-          ratio={4 / 3}
+          ratio={4 / 2}
           borderY="1px"
           borderColor="gray.200"
           my={[2, 4]}
         >
-          <Image src={image} alt="Animal image" />
+          <Image objectFit="cover" src={image} alt="Animal image" />
         </AspectRatio>
 
         {isFeed ? (
