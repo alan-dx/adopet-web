@@ -22,7 +22,7 @@ export function setupApiClient(ctx = undefined) {
   }, (error: AxiosError) => {
 
     if (error.response.status === 401) {
-      if (error.response.data?.message === 'Invalid JWT token.' || 'Invalid Token') {
+      if (error.response.data?.message === 'Invalid JWT token.') {
         cookies = parseCookies(ctx)//AC
 
         const originalConfig = error.config
@@ -36,8 +36,20 @@ export function setupApiClient(ctx = undefined) {
 
           api.post('refresh-token')
           .then((response => {
-            console.log('sucesso na rota de refresh', response)
+            console.log('sucesso na rota de refresh')
             const {token} = response.data
+
+            if (!process.browser) {
+
+              const rtid = response.headers['set-cookie'][0].split(";")
+              const setRtid = rtid[0].slice(5)
+
+              setCookie(ctx, 'rtid', setRtid, {//update rtid httponly cookie
+                maxAge: 60*60*24*30,
+                path: '/',
+                httpOnly: true
+              })
+            }
 
             setCookie(ctx, 'adopet.token', token, {
               maxAge: 60*60*24*30,
