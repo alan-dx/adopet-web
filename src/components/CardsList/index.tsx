@@ -12,7 +12,8 @@ type DonationPost = {
   createdAt: string;
   age: string;
   user: {
-    name: string
+    name: string;
+    avatarURL: string;
   };
   images: {
     id: string;
@@ -40,7 +41,7 @@ export function CardsList({data}: CardListProps) {
             image={donation.images[0].imageURL}
             postedIn="30"
             description={donation.description}
-            avatar={user?.avatarURL}
+            avatar={donation.user.avatarURL}
             onClick={() => router.push(`/details/${donation.id}`)}
             isFeed
           />

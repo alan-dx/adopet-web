@@ -60,42 +60,29 @@ const Card = ({
           <Image objectFit="cover" src={image} alt="Animal image" />
         </AspectRatio>
 
-        {isFeed ? (
-          <Flex align="center" justify="space-between" px={[2, 4]}>
-            <Flex align="center">
-              <IconButton
-                variant="ghost"
-                aria-label="Like"
-                icon={<FiHeart />}
-              />
-              <Text color="gray.500">35</Text>
+        <Flex align="center" justify="space-between" px={[2, 4]}>
+          <Flex align="center">
+            <IconButton
+              variant="ghost"
+              aria-label="Like"
+              icon={<FiHeart />}
+            />
+            <Text color="gray.500">35</Text>
 
-              <IconButton
-                ml={4}
-                color="gray.500"
-                variant="ghost"
-                aria-label="Share"
-                icon={<FiShare2 />}
-              />
-            </Flex>
-
-            <Button onClick={onClick} _hover={{backgroundColor: 'green.600'}} bg="green.300" color="gray.50" px={8}>
-              Adotar
-            </Button>
+            <IconButton
+              ml={4}
+              color="gray.500"
+              variant="ghost"
+              aria-label="Share"
+              icon={<FiShare2 />}
+            />
           </Flex>
-        ) : (
-          <Box px={4}>
-            <Text as="span" color="gray.500">
-              {description}
-            </Text>
 
-            <Divider my={4} />
-
-            <Box maxW={400} mx="auto">
-              <ActionButton>Adotar</ActionButton>
-            </Box>
-          </Box>
-        )}
+          <Button onClick={onClick} _hover={{backgroundColor: 'green.600'}} bg="green.300" color="gray.50" px={8}>
+            Adotar
+          </Button>
+        </Flex>
+        
       </Flex>
     </Box>
   );
