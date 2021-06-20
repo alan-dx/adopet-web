@@ -11,20 +11,23 @@ import {
   useDisclosure,
   useBreakpointValue,
 } from '@chakra-ui/react';
+import router, { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { FiPlus, FiPower } from 'react-icons/fi';
+import { FiPlus, FiPower, FiArrowLeft } from 'react-icons/fi';
 import { AuthContext } from '../../contexts/AuthContext';
 
 import { ModalNewPost } from '../Modal/NewPost';
 
 interface HeaderProps {
   title: string;
+  isFeed?: boolean
 }
 
-const Header = ({ title }: HeaderProps) => {
+const Header = ({ title, isFeed }: HeaderProps) => {
   const { onOpen, isOpen, onClose } = useDisclosure();
 
   const { user } = useContext(AuthContext)
+  const router = useRouter()
 
   const { signOutByContext } = useContext(AuthContext);
 
@@ -43,18 +46,29 @@ const Header = ({ title }: HeaderProps) => {
           py={4}
           px={8}
         >
-          <Flex align="center">
-            <Avatar
-              size="md"
-              src={`${user?.avatarURL}`}
-              name={`${user?.name}`}
-            />
-            {isDesktop && (
-              <Text fontSize="xl" color="gray.50" ml={4}>
-                {user?.name}
-              </Text>
-            )}
-          </Flex>
+          {isFeed ?
+            (
+              <Flex align="center">
+                <Avatar
+                  size="md"
+                  src={`${user?.avatarURL}`}
+                  name={`${user?.name}`}
+                />
+                {isDesktop && (
+                  <Text fontSize="xl" color="gray.50" ml={4}>
+                    {user?.name}
+                  </Text>
+                )}
+              </Flex>
+            ) : (
+              <Flex align="center">
+                <Button onClick={() => router.back()} bg="transparent" _hover={{backgroundColor: 'purple.700'}}>
+                  <Icon as={FiArrowLeft} color="gray.50" boxSize={5} />
+                </Button>
+                <Text fontSize="xl" color="gray.50" ml={2}>Voltar</Text>
+              </Flex>
+            )
+          }
 
           <Center>
             <Text fontSize="xl" fontWeight="bold" color="gray.50">
@@ -68,27 +82,31 @@ const Header = ({ title }: HeaderProps) => {
             my="auto"
             ml="auto"
           >
-            {isDesktop ? (
-              <Button
-                variant="solid"
-                bg="whiteAlpha.900"
-                _hover={{ bg: 'whiteAlpha.700' }}
-                rightIcon={<FiPlus />}
-                onClick={() => onOpen()}
-              >
-                <Text px={4} color="gray.600">
-                  Novo post
-                </Text>
-              </Button>
-            ) : (
-              <Button
-                variant="unstyled"
-                _hover={{ bg: 'purple.400' }}
-                onClick={() => onOpen()}
-              >
-                <Icon as={FiPlus} boxSize={6} color="gray.50" />
-              </Button>
-            )}
+            {
+              isFeed && (
+                isDesktop ? (
+                  <Button
+                    variant="solid"
+                    bg="whiteAlpha.900"
+                    _hover={{ bg: 'whiteAlpha.700' }}
+                    rightIcon={<FiPlus />}
+                    onClick={() => onOpen()}
+                  >
+                    <Text px={4} color="gray.600">
+                      Novo post
+                    </Text>
+                  </Button>
+                ) : (
+                  <Button
+                    variant="unstyled"
+                    _hover={{ bg: 'purple.400' }}
+                    onClick={() => onOpen()}
+                  >
+                    <Icon as={FiPlus} boxSize={6} color="gray.50" />
+                  </Button>
+                )
+              )
+            }
             <Button
               onClick={signOutByContext}
               variant="unstyled"

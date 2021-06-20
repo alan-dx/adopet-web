@@ -1,6 +1,7 @@
 import { Card } from '../Card';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useRouter } from 'next/router';
 
 type DonationPost = {
   id: string;
@@ -27,6 +28,7 @@ interface CardListProps {
 export function CardsList({data}: CardListProps) {
 
   const { user } = useContext(AuthContext)
+  const router = useRouter()
 
   return (
     <>
@@ -39,6 +41,7 @@ export function CardsList({data}: CardListProps) {
             postedIn="30"
             description={donation.description}
             avatar={user?.avatarURL}
+            onClick={() => router.push(`/details/${donation.id}`)}
             isFeed
           />
         )

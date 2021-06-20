@@ -58,7 +58,7 @@ const Feed = ({donations}) => {
         <title>Feed | AdoPet</title>
       </Head>
 
-      <Header title="AdoPet" />
+      <Header title="AdoPet" isFeed />
 
       <Flex
         as="main"

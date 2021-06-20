@@ -1,10 +1,11 @@
-import { Flex } from '@chakra-ui/react';
+import { Flex, Box, Text, Avatar } from '@chakra-ui/react';
 import Head from 'next/head';
 
 import { Header } from '../../components/Header';
-import { Card } from '../../components/Card';
+import { withSSRAuth } from '../../utils/withSSRAuth';
+import { setupApiClient } from '../../services/api';
 
-function Details() {
+export default function Details() {
   return (
     <>
       <Head>
@@ -19,22 +20,39 @@ function Details() {
         maxW={975}
         direction="column"
         align="center"
+        bg="white"
         px={[4, 8]}
         py={[8, 4]}
-        mt={[16, 0]}
+        mt={[16, 8]}
+        borderRadius="xl"
         mx="auto"
       >
-        <Card
-          name="Abrigo Flora e Fauna"
-          image="https://i.guim.co.uk/img/media/fe1e34da640c5c56ed16f76ce6f994fa9343d09d/0_174_3408_2046/master/3408.jpg?width=1200&height=900&quality=85&auto=format&fit=crop&s=0d3f33fb6aa6e0154b7713a00454c83d"
-          postedIn="30"
-          description="Cleiton e um doguinho muito simpatico e feliz e gosta muito de brincar
-          e morder a canela dos outros."
-          avatar="https://img.rawpixel.com/s3fs-private/rawpixel_images/website_content/k-p-1-ae-0036.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=b52c28c28aa88a6e524455c80ea9ed85"
-        />
+        <Flex
+          flexDirection="row"
+          w="100%"
+          alignItems="center"
+        >
+            <Avatar size="md" name={'name'} src="https://images.unsplash.com/photo-1510227272981-87123e259b17?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=3759e09a5b9fbe53088b23c615b6312e" />
+            <Text color="gray.700" fontWeight="medium" ml={4}>John Doe</Text>
+        </Flex>
       </Flex>
     </>
   );
 }
 
-export default Details;
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+
+  const {id} = ctx.params
+
+  const api = setupApiClient(ctx)
+
+  const response = await api.get(`/donations/${id}`)
+
+  console.log('donation detail', response.data)
+
+  return {
+    props: {
+
+    }
+  }
+})

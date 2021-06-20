@@ -19,6 +19,7 @@ interface CardProps {
   image: string;
   description: string;
   isFeed?: boolean;
+  onClick?: () => void;
 }
 
 const Card = ({
@@ -28,6 +29,7 @@ const Card = ({
   image,
   description,
   isFeed,
+  onClick
 }: CardProps) => {
   return (
     <Box bg="white" width="full" borderRadius="md" boxShadow="xl">
@@ -77,7 +79,7 @@ const Card = ({
               />
             </Flex>
 
-            <Button bg="green.300" color="gray.50" px={8}>
+            <Button onClick={onClick} _hover={{backgroundColor: 'green.600'}} bg="green.300" color="gray.50" px={8}>
               Adotar
             </Button>
           </Flex>
