@@ -47,7 +47,9 @@ export function setupApiClient(ctx = undefined) {
               setCookie(ctx, 'rtid', setRtid, {//update rtid httponly cookie
                 maxAge: 60*60*24*30,
                 path: '/',
-                httpOnly: true
+                httpOnly: true,
+                sameSite: 'Lax',
+                secure: false
               })
             }
 

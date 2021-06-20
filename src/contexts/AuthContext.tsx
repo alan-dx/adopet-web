@@ -47,13 +47,6 @@ export function signOut() {
 
   Router.push('/signin')
 
-  // //TESTES DA ROTA REFRESH-TOKEN
-  // api.post('refresh-token').then(response => {
-  //   console.log(response)
-  // }).catch(error => {
-  //   console.log(error)
-  // })
-
 }
 
 export const AuthContext = createContext({} as AuthContextData )
@@ -66,22 +59,22 @@ export function AuthProvider({children}:AuthProviderProps) {
     
     const { 'adopet.token': token } = parseCookies()
 
-    // if (token) {
-    //     api.get('/profile').then(response => {
-    //       const { name, email, id, isOng, avatarURL } = response.data
-    //       console.log(name)
+    if (token) {
+        api.get('/profile').then(response => {
+          const { name, email, id, isOng, avatarURL } = response.data
+          console.log(name)
   
-    //       setUser({
-    //         id,
-    //         name,
-    //         email,
-    //         isOng,
-    //         avatarURL
-    //       })
-    //     }).catch(error => {
-    //       console.log(error)
-    //     })
-    // }
+          setUser({
+            id,
+            name,
+            email,
+            isOng,
+            avatarURL
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+    }
   }, [])
 
   const signIn = useCallback(async ({email, password}: SignInCredentials)  => {
