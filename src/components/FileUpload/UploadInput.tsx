@@ -23,7 +23,7 @@ const UploadInput = ({
   const handleClick = () => inputRef.current?.click();
 
   return (
-    <InputGroup onClick={handleClick}>
+    <InputGroup onClick={handleClick} w="auto">
       <input
         type={'file'}
         multiple={multiple}
@@ -35,7 +35,7 @@ const UploadInput = ({
           inputRef.current = e;
         }}
       />
-      <>{children}</>
+      {children}
     </InputGroup>
   );
 };
