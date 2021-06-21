@@ -14,6 +14,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useMutation } from 'react-query';
 import { api } from '../../services/apiClient';
+import { withSSRAuth } from '../../utils/withSSRAuth';
 
 type UpdateProfileData = {
   images: FileList;
@@ -37,7 +38,7 @@ const profileFormSchema = yup.object().shape({
   newPassword: yup.string(),
 });
 
-function Profile() {
+export default function Profile() {
 
   const { user, setUser } = useContext(AuthContext)
   const toast = useToast()
@@ -238,4 +239,11 @@ function Profile() {
   );
 }
 
-export default Profile;
+export const getServerSideProps = withSSRAuth(async (ctx) => {
+
+  return {
+    props: {
+      
+    }
+  }
+})
