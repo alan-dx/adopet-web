@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import { useToast } from '@chakra-ui/react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react'
 import {createContext, ReactNode} from 'react'
 import Router from 'next/router'
 import { setCookie, destroyCookie, parseCookies } from 'nookies'
@@ -13,7 +14,8 @@ interface AuthContextData {
   user: User;
   signIn: (credentials: SignInCredentials) => Promise<void>;
   signUp: (credentials: SignUpCredentials) => Promise<void>;
-  signOutByContext: () => void
+  signOutByContext: () => void;
+  setUser?: Dispatch<SetStateAction<User>>;
 }
 
 type User = {
@@ -54,6 +56,7 @@ export const AuthContext = createContext({} as AuthContextData )
 export function AuthProvider({children}:AuthProviderProps) {
 
   const [user, setUser] = useState<User>(null)
+  const toast = useToast()
 
   useEffect(() => {
     
@@ -86,7 +89,7 @@ export function AuthProvider({children}:AuthProviderProps) {
       })
 
       const {token, user: { id, name, avatarURL, isOng }} = response.data
-      console.log(user)
+
       setUser({
         id,
         name,
@@ -109,10 +112,16 @@ export function AuthProvider({children}:AuthProviderProps) {
 
       Router.push('/feed')
     } catch (error) {
-      const { status } = error.response
+      const { status } = error?.response
 
       if (status == 401) {
-        alert('Email ou senha incorretos!')
+        toast({
+          title: 'Verifique os dados!',
+          description: 'A senha/e-mail informados não estão corretos!',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
       }
       
     }
@@ -129,16 +138,35 @@ export function AuthProvider({children}:AuthProviderProps) {
 
       Router.push('/signin')
 
-      alert('Usuário cadastrado com sucesso!')
+      toast({
+        title: 'Usuário cadastrado!',
+        description: 'Sua conta foi criada com sucesso.',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      });
 
     } catch (error) {
 
       const { status } = error.response
 
       if (status == 409) {
-        alert('Este e-mail já está sendo utilizado em outra conta.')
+        toast({
+          title: 'Ops!...',
+          description: 'Já existe uma conta cadastrada neste e-mail.',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
       } else {
-        alert('Houve um erro ao realizar seu cadastro, tente novamente mais tarde!')
+        toast({
+          title: 'Ops!...',
+          description: 'Houve um problema ao realizar seu cadastrado, tente novamente mais tarde.',
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
+
       }
       
     }
@@ -147,7 +175,7 @@ export function AuthProvider({children}:AuthProviderProps) {
   const signOutByContext = useCallback(signOut, [])
 
   return (
-    <AuthContext.Provider value={{user, signIn, signUp, signOutByContext}}>
+    <AuthContext.Provider value={{user, signIn, signUp, signOutByContext, setUser}}>
       {children}
     </AuthContext.Provider>
   )

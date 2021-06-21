@@ -107,8 +107,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   const response = await api.get(`/donations/${id}`)
 
-  console.log('donation detail', response.data)
-
   return {
     props: {
       donation: response.data

@@ -47,7 +47,7 @@ const Header = ({ title, isFeed }: HeaderProps) => {
           px={8}
         >
           {isFeed ? (
-            <Flex align="center">
+            <Flex as="button" align="center" onClick={() => router.push(`/profile/${user.id}`)}>
               <Avatar
                 size="md"
                 src={`${user?.avatarURL}`}
