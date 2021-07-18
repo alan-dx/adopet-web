@@ -3,7 +3,7 @@
 </h4>
 
 ## About
-Adopet is a platform where users can share cases of abandoned animals or animals available for adoption. Its goal is to reduce cases of animal abandonment during the Covid-19 pandemic. This project was developed during the Code/Station Hackathon, an event held by Rocketseat and Shawee :heartpurple:
+Adopet is a platform where users can share cases of abandoned animals or animals available for adoption. Its goal is to reduce cases of animal abandonment during the Covid-19 pandemic. This project was developed during the Code/Station Hackathon, an event held by Rocketseat and Shawee.
 
 ## Libraries and Tools (front-end)
   - NextJS;
