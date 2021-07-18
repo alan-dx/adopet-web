@@ -44,6 +44,7 @@ const NewPost = ({ closeModal }: NewPostProps) => {
   const queryClient = useQueryClient();
   const mutation = useMutation(
     async (formData: FormData) => {
+      console.log(formData.getAll("title"))
       const response = await api.post('/donations', formData);
 
       return response.data;
@@ -80,7 +81,8 @@ const NewPost = ({ closeModal }: NewPostProps) => {
         duration: 4000,
         isClosable: true,
       });
-    } catch {
+    } catch (err) {
+      console.log(err)
       toast({
         title: 'Falha no cadastro',
         description: 'Ocorreu um erro ao tentar cadastrar a seu post.',

@@ -112,9 +112,7 @@ export function AuthProvider({children}:AuthProviderProps) {
 
       Router.push('/feed')
     } catch (error) {
-      const { status } = error?.response
 
-      if (status == 401) {
         toast({
           title: 'Verifique os dados!',
           description: 'A senha/e-mail informados não estão corretos!',
@@ -122,7 +120,6 @@ export function AuthProvider({children}:AuthProviderProps) {
           duration: 4000,
           isClosable: true,
         });
-      }
       
     }
   }, [])
